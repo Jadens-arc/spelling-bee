@@ -7,10 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Spelling Bee</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
     <script src="js/bootstrap.bundle.js" defer></script>
     <script src="js/main.js" defer></script>
 </head>
 <body style="min-height: 100vh" class="d-flex flex-column">
+    <div id="keyboard">
+    </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
         <a class="navbar-brand" href="#">Spelling Bee</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,11 +61,10 @@
             </div>
             <div class="card-body">
                 <label class="form-label" for="input">Spell It!</label>
-                <input class="form-control" name="input" id="input" type="text">
+                <input class="form-control" name="input" id="input" type="text" readonly>
                 <button class="mt-5 btn btn-primary" id="submit-btn">Submit</button>
             </div>
         </div>
     </div>
-
 </body>
 </html>

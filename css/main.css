@@ -1,0 +1,10 @@
+#keyboard {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    max-width: 100vw;
+}
+

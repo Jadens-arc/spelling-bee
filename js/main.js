@@ -8,6 +8,7 @@ const number_incorrect = document.getElementById("number-incorrect");
 const accuracy = document.getElementById("accuracy");
 const round = document.getElementById("round-number");
 const history = document.getElementById("history");
+const keyboard = document.getElementById("keyboard");
 let word;
 let definitions = [];
 
@@ -128,6 +129,43 @@ const handle_submission = () => {
     round.innerText = (parseInt(round.innerText) + 1).toString();
 };
 
+const init_keyboard = () => {
+    [
+        ["delete"],
+        ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+        ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+        ["z", "x", "c", "v", "b", "n", "m"],
+    ].forEach((row, index) => {
+        let key_row = document.createElement("div");
+        key_row.classList.add("key-row");
+        key_row.classList.add("d-flex")
+        if (index === 0) {
+            key_row.classList.add("justify-content-end")
+        } else {
+            key_row.classList.add("justify-content-center")
+        }
+        row.forEach((letter) => {
+            let key = document.createElement("button");
+            key.classList.add("key");
+            key.classList.add("btn");
+            key.classList.add("btn-sm");
+            key.classList.add("btn-outline-dark");
+            key.classList.add("mx-1");
+            key.classList.add("my-2");
+            key.innerText = letter.toUpperCase();
+            key.addEventListener("click", () => {
+                if (letter === "delete") {
+                    input.value = input.value.substring(0, input.value.length - 1)
+                } else {
+                    input.value += letter;
+                }
+            })
+            key_row.appendChild(key);
+        });
+        keyboard.appendChild(key_row);
+    })
+};
+
 play_audio.addEventListener("click", () => speak(word));
 
 define.addEventListener("click", () => {
@@ -144,7 +182,6 @@ input.addEventListener("keydown", (e) => {
         handle_submission()
     }
 })
-
+init_keyboard();
 load_round();
-
 
