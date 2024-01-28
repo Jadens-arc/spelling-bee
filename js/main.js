@@ -93,16 +93,9 @@ const append_history = (word, correct) => {
     }
     new_record.innerHTML += " " + word;
     history.appendChild(new_record);
-}
+};
 
-play_audio.addEventListener("click", (e) => speak(word));
-
-define.addEventListener("click", (e) => {
-    definitions.forEach((definition) => speak(definition));
-});
-
-
-submit_btn.addEventListener("click", (e) => {
+const handle_submission = () => {
     if (input.value.toLowerCase().trim() === word.toLowerCase().trim()) {
         flash("Correct! Good Job! You now have a new word", "primary");
         append_history(word, true);
@@ -118,7 +111,24 @@ submit_btn.addEventListener("click", (e) => {
     }
     accuracy.innerText = (parseInt(number_correct.innerText) / parseInt(round.innerText) * 100).toString() + "%";
     round.innerText = (parseInt(round.innerText) + 1).toString();
+};
+
+play_audio.addEventListener("click", (e) => speak(word));
+
+define.addEventListener("click", (e) => {
+    definitions.forEach((definition) => speak(definition));
 });
+
+submit_btn.addEventListener("click", (e) => {
+    handle_submission();
+});
+
+input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        handle_submission()
+    }
+})
 
 load_round();
 
