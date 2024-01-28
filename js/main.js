@@ -30,12 +30,16 @@ const get_word = () => {
     });
 }
 
-const get_definition = () => {
-    return new Promise((resolve) => {
+const get_definition = (word) => {
+    return new Promise((resolve, reject) => {
         fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + word)
             .then(res => res.json())
             .then((data) => {
-                resolve(data);
+                if (data['title'] === "No Definitions Found") {
+                    reject("Definition not found");
+                } else {
+                    resolve(data[0]['meanings']);
+                }
             }
         );
     });
@@ -69,18 +73,20 @@ const load_round = () => {
     definitions = [];
     get_word().then(data => {
         word = data;
-        get_definition().then((data) => {
-            if (data['title'] === "No Definitions Found") {
-                return load_round();
-            }
-            data[0]['meanings'].forEach(meaning => {
-                meaning['definitions'].forEach(definition => {
-                    definitions.push(definition['definition']);
+        get_definition(word)
+            .then((data) => {
+                data.forEach(meaning => {
+                    meaning['definitions'].forEach(definition => {
+                        definitions.push(definition['definition']);
+                    });
                 });
-            });
-            play_audio.disabled = false;
-            define.disabled = false;
-        });
+                play_audio.disabled = false;
+                define.disabled = false;
+            })
+            .catch(() => {
+                return load_round();
+            })
+        ;
     })
 };
 
@@ -88,10 +94,19 @@ const append_history = (word, correct) => {
     let new_record = document.createElement("li");
     new_record.classList.add("dropdown-item");
     if (!correct) {
-        new_record.innerHTML += X_ICON;
-        new_record.classList.add("disabled")
+        new_record.innerHTML += X_ICON +  "<s>" + input.value + "</s>";
     }
+    new_record.setAttribute("word", word);
     new_record.innerHTML += " " + word;
+    new_record.addEventListener("click", () => {
+        get_definition(word).then(data => {
+            data.forEach(meaning => {
+                meaning['definitions'].forEach(definition => {
+                    speak(definition['definition']);
+                });
+            });
+        });
+    })
     history.appendChild(new_record);
 };
 
@@ -104,7 +119,7 @@ const handle_submission = () => {
         load_round();
     } else {
         flash("Incorrect. The word was \"" + word + "\". Good try. You have a new word", "danger");
-        append_history("<s>" + input.value + "</s>\n" + word, false);
+        append_history(word, false);
         input.value = "";
         number_incorrect.innerText = (parseInt(number_incorrect.innerText) + 1).toString();
         load_round();
