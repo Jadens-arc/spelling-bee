@@ -52,6 +52,7 @@ const flash = (message, type) => {
     new_alert.classList.add("mt-3");
     new_alert.classList.add("alert-" + type);
     new_alert.innerText = message;
+    new_alert.addEventListener("click",() => new_alert.remove());
     alerts.appendChild(new_alert);
     setTimeout(() => {
         new_alert.remove();
