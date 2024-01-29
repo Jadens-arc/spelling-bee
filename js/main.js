@@ -170,6 +170,7 @@ const init_keyboard = () => {
 play_audio.addEventListener("click", () => speak(word));
 
 define.addEventListener("click", () => {
+    speak(""); // patch for chrome
     definitions.forEach((definition) => speak(definition));
 });
 
